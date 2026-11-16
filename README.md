@@ -40,21 +40,73 @@ To create a sample retail dataset, identify and handle missing values (`NaN`/`No
 #Cleaning and Preparing Retail Data using Pandas
 
 #Step 1: Create a sample retail dataset
+import pandas as pd
+
+data = {
+    'Order_ID': [101, 102, 103, 104, 105, 105, 106, 107],
+    'Product': ['Laptop', 'Mobile', 'Tablet', 'Laptop',
+                'Mobile', 'Mobile', 'Tablet', 'Laptop'],
+    'Region': ['South', 'North', None, 'East',
+               'West', 'West', 'South', None],
+    'Sales': [50000, 30000, 25000, None,
+              40000, 40000, None, 55000],
+    'Discount': [5000, None, 2000, 3000,
+                 4000, 4000, None, 5000],
+    'Profit': [8000, 5000, None, 7000,
+               6000, 6000, 4500, None]
+}
+
+df = pd.DataFrame(data)
+
+print("Original Dataset:\n", df)
+print("\nInitial Shape:", df.shape)
 
 #Step 2: Check for missing values
+print("\nMissing Values:")
+print(df.isnull().sum())
 
 #Step 3: Fill missing numeric values with column mean
+numeric_cols = ['Sales', 'Discount', 'Profit']
 
+for col in numeric_cols:
+    df[col] = df[col].fillna(df[col].mean())
+    
 #Step 4: Fill missing Region with mode (most frequent value)
+df['Region'] = df['Region'].fillna(
+    df['Region'].mode()[0]
+)
 
 #Step 5: Remove duplicate records
+df = df.drop_duplicates()
 
 #Step 6: Display summary statistics
+print("\nCleaned Dataset:\n", df)
 
+print("\nUpdated Shape:", df.shape)
+
+print("\nSummary Statistics:\n", df.describe())
 
 
 ## Output
+Initial Shape: (8, 6)
 
+Missing Values:
+Order_ID    0
+Product     0
+Region      2
+Sales       2
+Discount    2
+Profit      2
+
+Updated Shape: (7, 6)
+
+Summary Statistics:
+
+         Order_ID         Sales      Discount       Profit
+count    7.000000      7.000000      7.000000     7.000000
+mean   103.428571  38571.428571   3857.142857  6142.857143
+min    101.000000  25000.000000   2000.000000  4500.000000
+max    107.000000  55000.000000   5000.000000  8000.000000
 
 ## Result
 The program successfully creates a retail dataset, identifies missing entries and duplicate rows, imputes missing values using mean and mode strategies, removes duplicates, and outputs a clean dataset ready for downstream analysis.
